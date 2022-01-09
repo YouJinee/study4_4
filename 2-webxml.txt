@@ -1,0 +1,13 @@
+encoding Filter (utf-8로 어떤 요청이든 파라미터든 다 인코딩 하겠다.)
+web-app 버전 2.5 -> 3.1로, 숫자만 바꾸면 안되고 안에 내용 정부 바꿔줘야함
+----------------------------------------
+ContextLoaderListener
+Listener : 이벤트 발생 시 일하는 클래스
+ContextLoaderListener : 이벤트 발생 (서버 켜질 때)시 xml 파일 읽어서 빈 등록
+애플리케이션 (스프링 프로젝트)의 전체 영역에 빈 등록
+거기에 관한 설정
+contextConfigLocation : 웹 프로젝트 한개 있는 영역의 설정파일(xml) 위치.
+----------------------------------------
+DispatcherServlet : Servlet이고 내용이 너무 많아
+
+web.xml에서 우리가 할건 관련 설정파일 위치만 보면됨. (쌤은 기본값 대신 편한대로 이동할거임)

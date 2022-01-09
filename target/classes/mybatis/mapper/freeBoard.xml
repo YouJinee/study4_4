@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.free.dao.IFreeBoardDao">
+	<!--SqlSession에서 IfreeBoardDao의 구현체를 만드는데 참고되는 파일 FreeBoardDaoOracle을 대신하는 
+		파일 namespace는 IFreeBoardDao의 풀네임을 작성 -->
+
+	<!-- ;금지 id = 메소드, parameterType = 메소드의 파라미터인데 VO의 경우 $, # 형태로 쓴다 ex) FreeBoardVO이면 
+		쿼리문에서 where bo_no=#{boNo} EL이랑 상관 없고 형태만 비슷한거임. #=pstmt, #=stmt resultType 
+		= 메소드의 returnType인데 중요한 것은 List의 경우 그 안에 담긴 데이터 타입 명시 select 결과를 알아서 list, 
+		set 등으로 맞춰서 return 해줌 -->
+		
+		<sql id="search">
+		<if test="!@org.apache.commons.lang3.StringUtils@isBlank(searchWord)">
+			<choose>
+				<when test='searchType=="T"'> AND bo_title LIKE '%'|| #{searchWord} || '%' </when>
+				<when test='searchType=="W"'> AND bo_writer LIKE '%' || #{searchWord} || '%'</when>
+				<when test='searchType=="C"'> AND bo_content LIKE '%' || #{searchWord} || '%'</when>
+			</choose>
+		</if>
+		<if test="!@org.apache.commons.lang3.StringUtils@isBlank(searchCategory)">
+			AND bo_category = #{searchCategory}
+		</if>
+</sql>
+		
+	<select id="getBoardList" resultType="com.study.free.vo.FreeBoardVO" parameterType="com.study.free.vo.FreeBoardSearchVO">				
+			<include refid="common.prePage"/>
+			SELECT   												
+			    bo_no,           bo_title,       bo_category			
+			    , bo_writer,     bo_pass,        bo_content			
+			    , bo_ip,         bo_hit,         bo_reg_date			
+			    , bo_mod_date,   bo_del_yn,							
+					b.comm_nm			AS bo_category_nm				
+			FROM  free_board	a										
+				, comm_code b 			 		 						
+		WHERE 			a.bo_category = b.comm_cd				
+		<include refid="search"/>
+		ORDER BY bo_no DESC
+	<include refid="common.postPage"/>
+	</select>
+	
+	<!-- JOIN이 많아지면 resultMap을 쓰세염 -->
+	<resultMap type ="com.study.free.vo.FreeBoardVO" id = "freeAttaches">
+	<collection property="attaches" 
+	column="{atchParentNo=bo_no, atchCategory=bo_type}" 
+	ofType="com.study.attach.vo.AttachVO"
+	select="com.study.attach.dao.IAttachDao.getAttachByParentNoList">
+	</collection>
+	</resultMap>
+	
+	<select id="getBoard" parameterType="int"
+		resultType="com.study.free.vo.FreeBoardVO" resultMap = "freeAttaches">
+		SELECT 
+		'FREE' AS bo_type,
+		bo_no, bo_title, bo_category
+		, bo_writer, bo_pass,
+		bo_content
+		, bo_ip, bo_hit, bo_reg_date
+		, bo_mod_date, bo_del_yn,
+		b.comm_nm AS bo_category_nm
+		FROM free_board a, comm_code b
+		WHERE
+		bo_no=#{boNo} and a.bo_category = b.comm_cd
+	</select>
+	
+	<update id="increaseHit" parameterType="int">
+		UPDATE free_board SET
+		bo_hit = bo_hit + 1
+		WHERE bo_no = #{boNo}
+	</update>
+	
+	<update id="updateBoard"
+		parameterType="com.study.free.vo.FreeBoardVO">
+		UPDATE free_board
+		SET bo_title = #{boTitle}, bo_category
+		= #{boCategory}, bo_content =
+		#{boContent}
+		WHERE bo_no = #{boNo}
+	</update>
+	
+	<update id="deleteBoard"
+		parameterType="com.study.free.vo.FreeBoardVO">
+		UPDATE free_board
+		SET bo_del_yn = 'Y'
+		WHERE bo_no =
+		#{boNo}
+	</update>
+	
+	<insert id="insertBoard"
+		parameterType="com.study.free.vo.FreeBoardVO">
+		  <selectKey keyProperty="boNo" resultType="int" order="BEFORE">
+		  SELECT seq_free_board.nextval FROM dual
+		  </selectKey>
+INSERT INTO free_board (									
+    bo_no, 			bo_title, 		bo_category					 
+    , bo_writer, 	bo_pass, 		bo_content							
+    , bo_ip, 			bo_hit,		bo_reg_date					    
+    ,bo_mod_date	 , bo_del_yn											
+) VALUES (																
+	#{boNo}  ,		#{boTitle}    ,	#{boCategory}  
+	, #{boWriter}	,	    #{boPass}    ,	 		#{boContent}
+	,#{boIp}					, 		#{boHit}    ,						sysdate
+	,null						,										'N')
+	</insert>
+
+<select id="getBoardMap" resultType="com.study.free.vo.FreeBoardVO" parameterType="Map">
+	SELECT * FROM free_board
+	<![CDATA[
+	WHERE bo_no < #{boNo}
+	AND bo_title = #{boTitle}
+	]]>
+</select>
+<select id="getBoardAnotation" resultType="com.study.free.vo.FreeBoardVO">
+		SELECT * FROM free_board
+	<![CDATA[
+	WHERE bo_no < #{boNo}
+	AND bo_title = #{boTitle}
+	]]>
+	</select>
+
+	<!--mybatis에서 자바 static 메소드 사용하기 @클래스 이름 @메소드 이름 (파라미터의 필드이름) -->
+	<select id="getTotalRowCount" resultType="int" parameterType="com.study.free.vo.FreeBoardSearchVO">
+		SELECT count(*)
+		FROM free_board
+		WHERE 1=1
+	<include refid="search"/> </select>
+</mapper>

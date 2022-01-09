@@ -1,0 +1,19 @@
+pom.xml 메이븐 관리파일
+프로젝트 설정 - build path에 maven dependency
+
+maven dependency에 pom.xml에 있는 dependency lib가 없으면
+인터넷 (maven repository)에서 자동으로 lib 다운받아 maven dependency에 추가
+관련 lib 전부 한번에 자동으로 받아줍니당.
+ 	=> 결론 : lib 직접 다운받지 말고 pom.xml에 dependency 추가해주자
+ 	
+기본적으로 적용이 알아서 잘 되는데 적용이 안되는 경우는
+프로젝트 우클릭 - run as
+-maven clean
+-maven install
+-maven clean // 컴파일 다시 한번
+
+xml 오류 났다 -> 지원 dependency가 지원해주지 않는 lib 이름이랑 버전 등등을 잘못썼을 확률이 매우 높고
+lib 이름 버전 외우고 다니는 사람 아니면 절대 못찾는다
+	-> 그냥 maven repository에서 복사 붙여넣기 잘하시면 됩니다.
+	
+프로젝트 우클릭 - properties - projectFacets 설정

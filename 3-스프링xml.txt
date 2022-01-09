@@ -1,0 +1,9 @@
+DispatcherServlet(mvx-servlet.xml)
+기본 (Annotation-drive, viewResolver) 웬만하면 건들지 말장
+정적 자원 매핑
+
+**@Controller 스캔해서 빈으로 가지고있쟈.**
+ContextLoaderListener (context-*.xml)
+@Service, @Mapper 기타 등등 빈 가지고 있기
++그 외 필요한 기능을 제공하는 객체 빈으로 가지고 있어야함
+(Business, Persistence 영역의 객체 빈으로 가지고 있어야함)

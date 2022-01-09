@@ -1,0 +1,35 @@
+댓글 : ajax 호출
+
+@RequestMapping 메소드로부터 받은 return 값을 JSON으로 받아서 화면에 그떄그때(새로고침 안되고 비동기로) 적용되는 실습 
+-Jquery 연습, ajax와 java 메소드 어떻게 통신하는지, RestFull이란?
+
+댓글은 FreeView.jsp에서만 신경쓰면 된다.
+
+javascript에는 Java에서만 쓰이는 객체를 사용할 수 없다.
+그래서 java 객체를 JSON으로 바꿔줘야한다.
+
+
+RestAPI, RestFull
+Rest : REST(Representational State Transfer)는 월드 와이드 웹과 같은 분산 하이퍼미디어 시스템을 위한
+			 소프트웨어 아키텍처의 한 형식이다. 
+			 =>서로 다른 플랫폼 (ajax와 tomcat)에서 통신을 위한 제약조건
+RestFull : 제약조건 잘 지킨거
+Rest(Full)API : 제약조건을 잘 지킨 API
+
+우리는 제약조건 몰라도 된다. spring이 알아서 해준다
+json으로 변환해주는 lib을 추가해줘야한다(GSON, MICROSOFT, JACKSON)
+@ResponseBody
+@RestController = @Controller + @ResponseBody
+
+댓글 : ajax 호출, 댓글은 로그인한 사람만 쓰도록 했다.
+---------------------------------------------
+바로 freeView로 돌아오게, 글 쓰던 내용도 유지되게
+request.getHeader("referer") = 이전 요청
+
+@Controller객체는 한개씩 생성된다
+사용자가 수백명이 요청해도 한개의 객체가 모두 처리
+결론 : @Controller처럼 개겣 한개 생성된 기능을 위한 클래스에서는 데이터 저장 필드 사용하지 마세요
+
+과제 : session을 사용해서 freeView에서 등록 누르고 로그인한 다음 다시 freeView로 가도록 해보세요
++ 내용도 갖고있어야함
+

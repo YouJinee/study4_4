@@ -1,0 +1,31 @@
+코드를 사용하는 이유
+1. 같은건데 이름이 헷갈리는 경우
+넥스트아이티교육센터학원, 넥스트아이티학원, 넥스트아이티교육학원...
+-헷갈리니까 HE01 로 통일하자
+
+2. 이름은 같은데 다른 학원일 경우
+넥스트아이티교육센터학원(대전), 넥스트아이티교육센터학원(서울)
+		HE01							HE02
+
+3. 이름이 길다 -> 데이터 용량이 큼
+-----------------------------------------
+
+BC00, JB00, HB00에 대한 코드테이블 필요
+
+freeForm, freeEdit : comm_code 테이블 조회해서 forEach
+CodeVO 만들긔
+freeList, freeView : free_board의 BC01이라는 데이터로 comm_code 테이블과 join해서 프로그램 값 얻기
+
+com.study.code.service : ICommCodeService, CommCodeServiceImple
+com.study.code.dao 	  : ICommCodeDao,		 CommCodeDaoOracle
+com.study.code.vo		  : CodeVO
+패키지 수평 수직 고치기
+
+freeList, freeView : 
+freeBoard의 BC01이라는 데이터로 comm_code 테이블과 join해서 프로그램 값 얻기 
+
+VO에 boCategoryNm필드 추가
+쿼리문에서 comm_code  테이블이랑 조인
+freeBoard 세팅 해주는 곳에서 추가된 필드 boCategoryNm 세팅
+rs.getString("bo_category_nm")
+jsp에서 boCategory 대신 boCategoryNm 보여주기

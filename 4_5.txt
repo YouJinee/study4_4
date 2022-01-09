@@ -1,0 +1,25 @@
+파일업로드
+
+준비사항 (서블릿 3.0 이후버전)
+1. web.xml에 multipart-config태그 추가
+2. mvc-servlet에 MultipartResolver빈 추가
+
+파일업로드를 위한 3가지 규칙
+1. form 메소드는 post
+2. enctype = multipart/form-data
+3. input type=file
+
+multipart
+enctype 
+application/x-www-form-urlencoded 인코딩함
+multipart/form-data : 인코딩 안함
+
+AttachController, Service 등은 완성, 윌는 신경 안써도 된다
+(DownLoad만)
+업로드는 freeForm에서 하면 
+1. 우리 컴퓨터에 실제 파일이 생성
+2. DB에 파일에 대한 정보 insert
+
+Logger (sysout만 했는데 이렇게 출력하는 것도 자원낭비)
+spring에서 제공해주는 log4j.xml (main이랑 test가 우선순위가 높다
+test에 작성하거나 test에 있는걸 지우거나)
